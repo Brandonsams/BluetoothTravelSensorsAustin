@@ -1,0 +1,109 @@
+---
+title: "atx_traffic"
+author: "Brandon Sams"
+date: "7/17/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+
+df <- read.csv('fm973_tx71-benwhite_riverside-timechunks.csv')
+head(df)
+```
+
+
+
+
+```{r}
+library(scales)
+
+plot <- ggplot(df, aes(x=as.POSIXct(hms::parse_hm(time)))) + 
+  geom_point(aes(y = weekday_num_samples, col="Weekday"), alpha=0.4) + 
+  geom_point(aes(y = weekend_num_samples, col="Weekend"), alpha=0.4) +
+  geom_smooth(aes(y = weekday_num_samples, col="Weekday"),span = 0.3) + 
+  geom_smooth(aes(y = weekend_num_samples, col="Weekend"),span = 0.3) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_x_datetime(breaks=date_breaks("1 hour"), date_labels = "%H:%M") + 
+  xlab("Time of Day") + 
+  ylab("Number of Observed Vehicles per 15 min") + 
+  ggtitle("Traffic Volume: Ben White Blvd") +
+  scale_color_manual(name="Day",
+                        labels = c("Weekday",
+                                   "Weekend"),
+                        values = c("Weekday"="darkred",
+                                   "Weekend"="steelblue")) + 
+  ggsave("TrafficVolume.png")
+
+plot
+```
+
+
+```{r}
+plot <- ggplot(df, aes(x=as.POSIXct(hms::parse_hm(time)))) + 
+  geom_point(aes(y = weekday_speed, col="Weekday"), alpha=0.4) + 
+  geom_point(aes(y = weekend_speed, col="Weekend"), alpha=0.4) +
+  geom_smooth(aes(y = weekday_speed, col="Weekday"),span = 0.3) + 
+  geom_smooth(aes(y = weekend_speed, col="Weekend"),span = 0.3) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_x_datetime(breaks=date_breaks("1 hour"), date_labels = "%H:%M") + 
+  xlab("Time of Day") + 
+  ylab("Average Speed (mph)") + 
+  ggtitle("Average Speed: Ben White Blvd") +
+  scale_color_manual(name="Day",
+                        labels = c("Weekday",
+                                   "Weekend"),
+                        values = c("Weekday"="darkred",
+                                   "Weekend"="steelblue"))+
+  ggsave("TrafficSpeed.png")
+
+plot
+```
+
+
+```{r}
+plot <- ggplot(df, aes(x=as.POSIXct(hms::parse_hm(time)))) + 
+  geom_point(aes(y = weekday_travel_time, col="Weekday"), alpha=0.4) + 
+  geom_point(aes(y = weekend_travel_time, col="Weekend"), alpha=0.4) +
+  geom_smooth(aes(y = weekday_travel_time, col="Weekday"),span = 0.3) + 
+  geom_smooth(aes(y = weekend_travel_time, col="Weekend"),span = 0.3) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_x_datetime(breaks=date_breaks("1 hour"), date_labels = "%H:%M") + 
+  xlab("Time of Day") + 
+  ylab("Average Travel Time (sec)") + 
+  ggtitle("Average Travel Time: Ben White Blvd") +
+  scale_color_manual(name="Day",
+                        labels = c("Weekday",
+                                   "Weekend"),
+                        values = c("Weekday"="darkred",
+                                   "Weekend"="steelblue")) +
+  ggsave("TrafficTravelTime.png")
+plot
+```
+
+```{r}
+plot <- ggplot(df, aes(x=as.POSIXct(hms::parse_hm(time)))) + 
+  geom_point(aes(y = weekday_pooled_sd_mph, col="Weekday"), alpha=0.4) + 
+  geom_point(aes(y = weekend_pooled_sd_mph, col="Weekend"), alpha=0.4) +
+  geom_smooth(aes(y = weekday_pooled_sd_mph, col="Weekday"),span = 0.3) + 
+  geom_smooth(aes(y = weekend_pooled_sd_mph, col="Weekend"),span = 0.3) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_x_datetime(breaks=date_breaks("1 hour"), date_labels = "%H:%M") + 
+  xlab("Time of Day") + 
+  ylab("Speed Pooled Standard Deviation ") + 
+  ggtitle("Standard Deviation for Travel Speed: Ben White Blvd") +
+  scale_color_manual(name="Day",
+                        labels = c("Weekday",
+                                   "Weekend"),
+                        values = c("Weekday"="darkred",
+                                   "Weekend"="steelblue")) + 
+  ggsave("TrafficSpeedSD.png")
+plot
+```
+
